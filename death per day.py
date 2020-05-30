@@ -37,6 +37,6 @@ def rollingPlot(df, window):
 
 df = loadWorkbook('Death per day.xlsx')
 rollingPlot(df,7)
-df.drop(df.columns[[1,2,3]], axis=1, inplace=True)
+df.drop(df.columns[[1,2,3,4]], axis=1, inplace=True)
 rollingPlot(df,7)
 rollingPlot(df[:-24],7)
