@@ -49,7 +49,13 @@ def rollingPlot(df, window):
 df = loadWorkbook('Death per day.xlsx')
 rollingPlot(df,7)
 
+#every 2 weeks
+df_e2v = df
+df_e2v.drop(df.columns[1::2], axis=1, inplace=True)
+rollingPlot(df_e2v,7)
+
 #first and last week comparison
-df.drop(df.columns[1:-1], axis=1, inplace=True)
-rollingPlot(df,7)
+df_fnl = df
+df_fnl.drop(df.columns[1:-1], axis=1, inplace=True)
+rollingPlot(df_fnl,7)
 rollingPlot(df[:-24],7)
