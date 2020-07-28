@@ -44,18 +44,58 @@ def rollingPlot(df, window):
         axe.legend(h,[labelz[i]])
     
     plt.tight_layout()
+
+
+def split_covid_exDeath(df):
+    exDeathz = df.iloc[:,1:3]
+    exDeath = df.iloc[:,2]-df.iloc[:,1]
+    df.drop(df.columns[:3], axis=1, inplace=True)
+
+    return df, exDeath, exDeathz
+
+
+def exDeathOlayPlot(df, exDeath):
+    fig, ax = plt.subplots()
     
+    df_all = df.iloc[:-14,-1].rolling(7, center=True, min_periods=1).mean().round()
+    df_all_axes = df_all.plot.area(stacked=True, title='Deaths per day', ax=ax)
+    df_all_label = "covid-19,  \u2020 %d" % df_all.sum()
     
+    exDed = exDeath[:-14].rolling(7, center=True, min_periods=1).mean().round()
+    exDed_axes = exDed.plot(color='black', label='Excess Death', ax=ax)
+    exDed_label = "excess death,  \u2020 %d" % exDed.sum()
+    
+    labelz = [exDed_label, df_all_label]
+    h1, l1 = ax.get_legend_handles_labels()
+    ax.legend(h1,labelz)
+    
+    ax.axis('auto')
+    plt.tight_layout()
+
+
+def exDeathsPlot(exDeathz):
+    fig, ax = plt.subplots()
+    
+    exDeathz_ra = exDeathz[:-14].rolling(7, center=True, min_periods=1).mean().round()
+    exDeathz_ra_axes = exDeathz_ra.plot.area(stacked=False, title='Excess Death', ax=ax)
+    
+    plt.tight_layout()
+
+
 df = loadWorkbook('Death per day.xlsx')
+df, exDeath, exDeathz = split_covid_exDeath(df)
+
 rollingPlot(df,7)
+exDeathOlayPlot(df, exDeath)
+exDeathsPlot(exDeathz)
 
 #every 2 weeks
-df_e2v = df
-df_e2v.drop(df.columns[1::2], axis=1, inplace=True)
-rollingPlot(df_e2v,7)
+df_e2v = df.copy()
+df_e2v.drop(df_e2v.columns[1::2], axis=1, inplace=True)
+df_e2_axes = rollingPlot(df_e2v,7)
 
 #first and last week comparison
-df_fnl = df
-df_fnl.drop(df.columns[1:-1], axis=1, inplace=True)
-rollingPlot(df_fnl,7)
-rollingPlot(df[:-24],7)
+df_fnl = df.copy()
+df_fnl.drop(df_fnl.columns[1:-1], axis=1, inplace=True)
+df_fnl_axes = rollingPlot(df_fnl,7)
+df_fnl_axes2 = rollingPlot(df[:-24],7)
