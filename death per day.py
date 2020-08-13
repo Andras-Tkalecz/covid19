@@ -92,10 +92,10 @@ exDeathsPlot(exDeathz)
 #every 2 weeks
 df_e2v = df.copy()
 df_e2v.drop(df_e2v.columns[1::2], axis=1, inplace=True)
-df_e2_axes = rollingPlot(df_e2v,7)
+rollingPlot(df_e2v,7)
 
 #first and last week comparison
 df_fnl = df.copy()
 df_fnl.drop(df_fnl.columns[1:-1], axis=1, inplace=True)
-df_fnl_axes = rollingPlot(df_fnl,7)
-df_fnl_axes2 = rollingPlot(df[:-24],7)
+rollingPlot(df_fnl,7)
+rollingPlot(df[:-24],7)
